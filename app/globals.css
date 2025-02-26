@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #f0f4fa;
   --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f1011;
+    --foreground: #ffffff;
   }
 }
 
@@ -18,4 +18,29 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* scroll Bar custom */
+/* Small width for vertical scrollbar */
+::-webkit-scrollbar {
+  width: 10px;  /* Small width */
+  height: 5px; /* Small height for horizontal scrollbar */
+}
+
+/* Track (background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: #222;  /* Dark background */
+  border-radius: 10px;
+}
+
+/* Scrollbar Handle */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #be0404, #c00362, #0502bd, #0416b9, #0423ac, #0332b4, #0324b6);  
+  border-radius: 2px;
+}
+
+/* Hover Effect */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #8000ff, #2b65ff, #00ffee, #48ff00, #fffb00, #ff7300, #ff0000);
 }
