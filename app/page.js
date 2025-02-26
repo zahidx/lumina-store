@@ -1,81 +1,78 @@
 "use client";
-import { ShoppingCart, Search, User, Star } from "lucide-react";
+import { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 
-const products = [
-  { id: 1, name: "Smartphone X", price: "$799", image: "/images/phone.jpg" },
-  { id: 2, name: "Wireless Headphones", price: "$199", image: "/images/headphones.jpg" },
-  { id: 3, name: "Smart Watch", price: "$299", image: "/images/watch.jpg" },
-];
+export default function HeroSection() {
+  const [timeOfDay, setTimeOfDay] = useState("");
+  const [featuredProduct, setFeaturedProduct] = useState(null);
+  const [location, setLocation] = useState("your area");
+  const [discount, setDiscount] = useState("10%");
 
-export default function HomePage() {
+  useEffect(() => {
+    const hours = new Date().getHours();
+    setTimeOfDay(
+      hours < 12 ? "Good Morning" : hours < 18 ? "Good Afternoon" : "Good Evening"
+    );
+
+    fetch("/api/featured-product") 
+      .then(res => res.json())
+      .then(data => setFeaturedProduct(data))
+      .catch(err => console.error("Error fetching product:", err));
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          setLocation("New York");
+          setDiscount("20%");
+          triggerConfetti(); // 🎉 Fire confetti when user gets a special discount
+        },
+        () => console.log("Geolocation not allowed")
+      );
+    }
+  }, []);
+
+  // 🎉 Celebration Effect
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 100,
+      spread: 160,
+      origin: { y: 0.6 },
+    });
+  };
+
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-md">
-        <h1 className="text-xl font-bold">ShopMate</h1>
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="pl-10 pr-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
-            />
-            <Search className="absolute left-2 top-2 h-5 w-5 text-gray-500 dark:text-gray-400" />
-          </div>
-          <ShoppingCart className="h-6 w-6 cursor-pointer text-gray-900 dark:text-gray-200" />
-          <User className="h-6 w-6 cursor-pointer text-gray-900 dark:text-gray-200" />
-        </div>
-      </nav>
+    <div className="relative h-[90vh] flex items-center justify-center text-center text-white overflow-hidden">
+      <img src="/hero-bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover scale-110" />
+      <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-md"></div>
 
-      {/* Hero Section */}
-      <section
-        className="relative h-[60vh] bg-cover bg-center flex items-center justify-center text-white"
-        style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
-      >
-        <div className="text-center p-6 bg-black/50 dark:bg-black/70 rounded-xl">
-          <h2 className="text-4xl font-bold">Discover the Best Deals</h2>
-          <p className="mt-2 text-lg">Exclusive offers on top brands</p>
-          <button className="mt-4 bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-lg">
-            Shop Now
-          </button>
-        </div>
-      </section>
+      <div className="relative z-10 p-6">
+        <h1 className="text-6xl font-extrabold drop-shadow-lg">
+          {timeOfDay}, Shopper! 🎉
+        </h1>
+        <p className="mt-4 text-lg drop-shadow-md">
+          🎊 Congratulations! Enjoy {discount} off in {location} today! 🎊
+        </p>
 
-      {/* Featured Products */}
-      <section className="p-6">
-        <h3 className="text-2xl font-semibold mb-4">Featured Products</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="p-4 text-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md"
+        {featuredProduct ? (
+          <div className="mt-6 flex flex-col items-center">
+            <h2 className="text-3xl font-bold">{featuredProduct.name}</h2>
+            <p className="text-lg text-gray-200">{featuredProduct.description}</p>
+            <button 
+              className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
+              onClick={triggerConfetti} // Extra confetti on button click
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-40 object-cover rounded-lg"
-              />
-              <div className="p-4">
-                <h4 className="text-lg font-semibold mt-2">{product.name}</h4>
-                <p className="text-gray-600 dark:text-gray-300">{product.price}</p>
-                <div className="flex justify-center mt-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-500" />
-                  ))}
-                </div>
-                <button className="mt-3 bg-green-500 dark:bg-green-600 text-white w-full py-2 rounded-lg">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-300 text-center p-4 mt-6">
-        <p>&copy; {new Date().getFullYear()} ShopMate. All Rights Reserved.</p>
-      </footer>
+              Shop {featuredProduct.name} 🎁
+            </button>
+          </div>
+        ) : (
+          <button 
+            className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
+            onClick={triggerConfetti}
+          >
+            Browse Bestsellers 🎁
+          </button>
+        )}
+      </div>
     </div>
   );
 }
