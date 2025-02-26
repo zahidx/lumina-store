@@ -135,10 +135,6 @@ const Sidebar = () => {
             </nav>
           </div>
         </motion.div>
-
-        {/* Vertical Divider */}
-        <div className="fixed top-0 right-0 h-full w-1 bg-gray-300 dark:bg-gray-600 z-10"></div>
-
         {/* Main Content */}
         <div
           className={`flex-1 -mt-3 bg-gray-50 dark:bg-gray-800 transition-all duration-300 ${

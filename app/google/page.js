@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "../compo/Api/Firebase";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { FaGoogle } from "react-icons/fa";
 
-const GoogleLogin = () => {
+const GoogleLoginComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
@@ -57,18 +57,25 @@ const GoogleLogin = () => {
 
         {!loading && (
           <div className="flex justify-center items-center w-full">
-          <button
-            onClick={handleGoogleSignIn}
-            className="mt-4 flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 text-center"
-          >
-            <FaGoogle />
-            Sign in with Google
-          </button>
-        </div>
-        
+            <button
+              onClick={handleGoogleSignIn}
+              className="mt-4 flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 text-center"
+            >
+              <FaGoogle />
+              Sign in with Google
+            </button>
+          </div>
         )}
       </div>
     </div>
+  );
+};
+
+const GoogleLogin = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GoogleLoginComponent />
+    </Suspense>
   );
 };
 
