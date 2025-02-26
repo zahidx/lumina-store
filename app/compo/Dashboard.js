@@ -1,81 +1,113 @@
 "use client";
+import { ShoppingCart, Printer, Bell, CreditCard } from "lucide-react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from "chart.js";
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Users, ShoppingCart, DollarSign } from "lucide-react";
+// Register necessary components for Chart.js
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const salesData = [
-  { name: "Jan", revenue: 12000 },
-  { name: "Feb", revenue: 18000 },
-  { name: "Mar", revenue: 14000 },
-  { name: "Apr", revenue: 20000 },
-  { name: "May", revenue: 22000 },
-  { name: "Jun", revenue: 25000 },
-];
+export default function Dashboard() {
+  // Data for the sales report graph
+  const salesData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], // Months
+    datasets: [
+      {
+        label: 'Sales ($)',
+        data: [4000, 5000, 3000, 7000, 9000, 6500, 8000], // Sales data
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true, // To fill the area under the line
+        tension: 0.1,
+      },
+    ],
+  };
 
-const orders = [
-  { id: "#12456", status: "Completed", amount: "$89.99", color: "text-green-500" },
-  { id: "#12457", status: "Pending", amount: "$125.49", color: "text-yellow-500" },
-  { id: "#12458", status: "Cancelled", amount: "$45.00", color: "text-red-500" },
-];
+  // Options for the chart
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Sales Report',
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return `$${context.raw.toLocaleString()}`; // Format numbers with commas and dollar sign
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            return `$${value.toLocaleString()}`; // Format the y-axis values with dollar sign
+          },
+        },
+      },
+    },
+  };
 
-export default function DashboardPage() {
   return (
-    <div className="p-6 grid gap-6 lg:grid-cols-3 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      {/* Stats Cards */}
-      {[
-        { title: "Sales", value: "$128,590", change: "+12%", Icon: DollarSign, color: "text-green-500" },
-        { title: "Orders", value: "1,540", change: "+8%", Icon: ShoppingCart, color: "text-blue-500" },
-        { title: "Customers", value: "12,875", change: "+5%", Icon: Users, color: "text-purple-500" },
-      ].map(({ title, value, change, Icon, color }, index) => (
-        <div
-          key={index}
-          className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-md hover:shadow-lg transition-all flex justify-between items-center border border-gray-200 dark:border-gray-800"
-        >
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{change} from last month</p>
-          </div>
-          <Icon className={`w-10 h-10 ${color}`} />
-        </div>
-      ))}
-
-      {/* Revenue Chart */}
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md col-span-3 border border-gray-200 dark:border-gray-800">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Revenue Overview</h3>
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={salesData}>
-              <XAxis dataKey="name" stroke="#888888" tick={{ fill: "currentColor" }} />
-              <YAxis stroke="#888888" tick={{ fill: "currentColor" }} />
-              <Tooltip contentStyle={{ backgroundColor: "#1E293B", color: "#ffffff", borderRadius: "8px" }} />
-              <Bar dataKey="revenue" fill="url(#gradient)" radius={[6, 6, 0, 0]} />
-              <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.2} />
-                </linearGradient>
-              </defs>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+    <div className="bg-white dark:bg-gray-800 min-h-screen p-6 text-gray-900 dark:text-white">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md">
+          Settings
+        </button>
       </div>
 
-      {/* Recent Orders */}
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md col-span-3 border border-gray-200 dark:border-gray-800">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Orders</h3>
-        <div className="space-y-3">
-          {orders.map(({ id, status, amount, color }, index) => (
-            <div
-              key={index}
-              className="flex justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all cursor-pointer"
-            >
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{id}</span>
-              <span className={`text-sm ${color} font-semibold`}>{status}</span>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">{amount}</span>
+      {/* Cards Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Sales Card with Graph */}
+        <div className="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-md flex flex-col gap-4">
+          <div className="flex flex-col justify-between w-full">
+            {/* Sales Data Card */}
+            <div>
+              <p className="text-2xl font-bold">$9,568</p>
+              <span className="text-red-500 text-sm">▼ 8.6%</span>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">Average Weekly Sales</p>
             </div>
-          ))}
+
+            {/* Sales Report Graph */}
+            <div className="w-full mt-4">
+              <Line data={salesData} options={chartOptions} />
+            </div>
+          </div>
         </div>
+
+        {/* Stats Cards - 2x2 Grid in the Same Row as Sales Card */}
+        <div className="grid grid-cols-2 gap-4 w-full border border-gray-300 dark:border-gray-600">
+          <Card icon={<ShoppingCart className="text-blue-400" />} value="85,246" label="Orders" />
+          <Card icon={<Printer className="text-green-400" />} value="$96,147" label="Income" />
+          <Card icon={<Bell className="text-red-400" />} value="846" label="Notifications" />
+          <Card icon={<CreditCard className="text-blue-400" />} value="$84,472" label="Payment" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Manual Card Component with Compact Style
+function Card({ icon, value, label }) {
+  return (
+    <div className="bg-white dark:bg-gray-700 flex items-center p-4 shadow-md w-full border-t border-r border-gray-300 dark:border-gray-600">
+      <div className="mr-3">{icon}</div>
+      <div>
+        <p className="text-2xl font-semibold">{value}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm">{label}</p>
       </div>
     </div>
   );

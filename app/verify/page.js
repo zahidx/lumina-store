@@ -31,7 +31,7 @@ const VerifyContent = () => {
       if (user.emailVerified) {
         clearInterval(interval);
         setStatus("verified");
-        setTimeout(() => router.push("/welcome"), 2000);
+        setTimeout(() => router.push("/dashboard"), 2000);
       }
     }, 3000);
 
