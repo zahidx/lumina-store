@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { auth } from "../compo/Api/Firebase";
 import { sendEmailVerification } from "firebase/auth";
@@ -8,7 +8,7 @@ import Confetti from "react-confetti";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, MailWarning, RefreshCw } from "lucide-react";
 
-const Verify = () => {
+const VerifyContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
@@ -26,7 +26,6 @@ const Verify = () => {
       return;
     }
 
-    // Polling for email verification status
     const interval = setInterval(async () => {
       await user.reload();
       if (user.emailVerified) {
@@ -57,7 +56,6 @@ const Verify = () => {
       setErrorMessage("Failed to resend email. Try again later.");
     }
 
-    // Cooldown timer for resend button
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -90,21 +88,18 @@ const Verify = () => {
             : `We've sent a verification link to ${email}. Please check your inbox and click the link.`}
         </p>
 
-        {/* Loading Status */}
         {status === "pending" && (
           <motion.div className="flex justify-center items-center mt-4">
             <Loader2 className="animate-spin text-blue-600" size={32} />
           </motion.div>
         )}
 
-        {/* Verified Status */}
         {status === "verified" && (
           <motion.div className="flex justify-center items-center mt-4 text-green-500">
             <CheckCircle size={48} />
           </motion.div>
         )}
 
-        {/* Error Status */}
         {status === "error" && (
           <motion.div className="mt-4 text-red-500 flex flex-col items-center">
             <MailWarning size={48} />
@@ -112,23 +107,27 @@ const Verify = () => {
           </motion.div>
         )}
 
-        {/* Resend Email Button */}
-{status !== "verified" && (
-  <motion.button
-    whileHover={{ scale: resendDisabled ? 1 : 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={handleResend}
-    disabled={resendDisabled}
-    className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-all disabled:bg-gray-100 flex w-2/3 justify-center items-center space-x-2 mx-auto"
-  >
-    <RefreshCw size={18} />
-    <span>{resendDisabled ? `Resend in ${timeLeft}s` : "Resend Email"}</span>
-  </motion.button>
-)}
-
+        {status !== "verified" && (
+          <motion.button
+            whileHover={{ scale: resendDisabled ? 1 : 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleResend}
+            disabled={resendDisabled}
+            className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-all disabled:bg-gray-100 flex w-2/3 justify-center items-center space-x-2 mx-auto"
+          >
+            <RefreshCw size={18} />
+            <span>{resendDisabled ? `Resend in ${timeLeft}s` : "Resend Email"}</span>
+          </motion.button>
+        )}
       </motion.div>
     </div>
   );
 };
+
+const Verify = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <VerifyContent />
+  </Suspense>
+);
 
 export default Verify;

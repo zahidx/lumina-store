@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { auth, db } from "../compo/Api/Firebase";
@@ -159,4 +159,12 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+const SuspenseWrapper = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Signup />
+    </Suspense>
+  );
+};
+
+export default SuspenseWrapper;
