@@ -7,6 +7,7 @@ import {
   FaSearch, FaBell, FaSun, FaMoon, FaPhone,
 } from "react-icons/fa";
 import { AiOutlineShop } from 'react-icons/ai';
+import { AppWindow } from "lucide-react";
 
 import MobileSidebar from "./MobileSidebar";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -16,6 +17,9 @@ import Product from "../compo/Product";
 import Order from "../compo/Order";
 import Customer from "../compo/Customer";
 import UserProfileTop from "./UserProfileTop";
+import AppWindows from "./AppWindows";
+import Notifications from "./Notifications";
+import SearchPage from "./SearchPage";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -81,7 +85,9 @@ const Sidebar = () => {
 )}
 
         <div className="flex items-center gap-4">
-          <FaSearch className="text-gray-900 dark:text-gray-100 cursor-pointer text-xl" />
+          <SearchPage />
+
+
           <button onClick={toggleDarkMode}>
             {darkMode ? (
               <FaSun className="text-yellow-500 text-xl" />
@@ -89,14 +95,20 @@ const Sidebar = () => {
               <FaMoon className="text-gray-400 text-xl" />
             )}
           </button>
-          <FaPhone className="text-gray-900 dark:text-gray-100 cursor-pointer text-xl" />
-          <FaBell className="text-gray-900 dark:text-gray-100 cursor-pointer text-xl" />
+
+          <AppWindows  />
+          <Notifications />
           <FaBars 
             className="text-gray-900 dark:text-gray-100 cursor-pointer text-xl md:hidden"
             onClick={() => setMobileNavOpen(true)}
           />
-          <UserProfileTop user={user} onLogout={handleLogout} setIsModalOpen={setIsModalOpen} />
+         
+          <UserProfileTop />
         </div>
+
+
+
+
       </div>
 
       {/* Sidebar & Main Content */}

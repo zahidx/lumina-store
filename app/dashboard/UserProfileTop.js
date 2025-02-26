@@ -7,11 +7,16 @@ const UserProfile = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const profileIconRef = useRef(null);
 
   // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !profileIconRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -26,11 +31,15 @@ const UserProfile = ({ user, onLogout }) => {
   return (
     <div className="relative">
       {/* Profile Image in Top Bar */}
-      <div className="cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+      <div
+        ref={profileIconRef}
+        className="cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {user?.photoURL ? (
           <img src={user.photoURL} alt="Profile" className="w-7 h-7 rounded-full" />
         ) : (
-          <FaUserCircle className="w-7 h-7 text-gray-600 dark:text-gray-400" />
+          <FaUserCircle className="w-7 h-7 text-gray-600 dark:text-gray-200" />
         )}
       </div>
 
