@@ -1,116 +1,221 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { FaCheckCircle } from "react-icons/fa";
+
+import React, { useEffect, useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { db } from "../compo/Api/Firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
+import { FaCheckCircle, FaArrowRight, FaCreditCard, FaPaypal } from "react-icons/fa";
+
+// Reusable component for order progress steps
+const OrderProgressStep = ({ step, title, description }) => (
+  <li className="mb-8 flex items-center">
+    <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full z-10">
+      {step}
+    </div>
+    <div className="ml-6">
+      <p className="text-lg font-medium text-gray-900 dark:text-white">{title}</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
+    </div>
+  </li>
+);
 
 const OrderConfirmation = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const [orderDetails, setOrderDetails] = useState(null);
+
+  const productId = searchParams.get("productId");
+  const quantityParam = searchParams.get("quantity") || "1";
+  const paymentMethodParam = searchParams.get("paymentMethod") || "credit";
+  const totalPriceParam = searchParams.get("totalPrice") || "0.00";
+
+  const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [orderNumber, setOrderNumber] = useState("");
+  const [orderDate, setOrderDate] = useState("");
+  const [estimatedDelivery, setEstimatedDelivery] = useState("");
+  const [error, setError] = useState(null);
 
-  // Simulate fetching order details from a server or database
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      // In a real-world scenario, you would fetch this data from an API or database
-      const orderData = {
-        orderId: "12345",
-        totalAmount: "$299.99",
-        items: [
-          { title: "Product A", quantity: 1, price: "$149.99" },
-          { title: "Product B", quantity: 1, price: "$150.00" },
-        ],
-        shippingAddress: "123 Street, City, Country",
-        paymentMethod: "Credit Card",
-        estimatedDelivery: "March 10, 2025",
-        status: "Confirmed",
-      };
-
-      setOrderDetails(orderData);
+  const fetchProduct = useCallback(async () => {
+    if (productId) {
+      try {
+        const docRef = doc(db, "electronics", productId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProduct({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          setError("Product not found!");
+        }
+        setOrderNumber("ORD-" + Math.floor(Math.random() * 1000000));
+        const now = new Date();
+        setOrderDate(now.toLocaleString());
+        const deliveryDate = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
+        setEstimatedDelivery(deliveryDate.toLocaleDateString());
+      } catch (error) {
+        setError("Error fetching product: " + error.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
       setLoading(false);
-    };
+    }
+  }, [productId]);
 
-    fetchOrderDetails();
-  }, []);
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
 
   if (loading) {
-    return <p className="text-center text-gray-600 dark:text-gray-400">Loading order details...</p>;
+    return (
+      <p className="mt-10 text-center text-gray-600 dark:text-gray-400">
+        Loading...
+      </p>
+    );
   }
 
-  if (!orderDetails) {
-    return <p className="text-center text-red-500">Order not found!</p>;
+  if (error) {
+    return (
+      <p className="mt-10 text-center text-red-500">{error}</p>
+    );
   }
+
+  const quantity = parseInt(quantityParam, 10);
+  const PaymentIcon = paymentMethodParam === "paypal" ? FaPaypal : FaCreditCard;
 
   return (
-    <div className="min-h-screen p-6 bg-white dark:bg-gray-900 text-gray-800 dark:text-white pt-24">
-      <div className="max-w-3xl mx-auto p-8 rounded-2xl shadow-2xl bg-white dark:bg-gray-800 space-y-6">
-        <h2 className="text-4xl font-semibold text-center text-gray-800 dark:text-white">Order Confirmed!</h2>
+    <main className="min-h-screen mt-10 bg-gray-100 dark:bg-[#111827] py-12 px-4 sm:px-6 lg:px-8">
+      <motion.article
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8"
+      >
+        {/* Confirmation Header */}
+        <header className="flex flex-col items-center">
+          <FaCheckCircle className="text-green-500 text-7xl mb-4" aria-hidden="true" />
+          <h1 className="mt-4 text-4xl font-extrabold text-gray-900 dark:text-white">
+            Order Confirmed!
+          </h1>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 text-center">
+            Thank you for your purchase. Your order has been successfully placed.
+          </p>
+        </header>
 
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="flex items-center gap-4 bg-green-100 dark:bg-green-700 p-4 rounded-lg shadow-md text-green-600 dark:text-white"
-        >
-          <FaCheckCircle size={24} />
-          <span className="text-lg font-semibold">Your order has been successfully placed!</span>
-        </motion.div>
-
-        {/* Order Summary */}
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold">Order Summary</h3>
-          <div className="mt-4">
-            {orderDetails.items.map((item, index) => (
-              <div key={index} className="flex justify-between py-2 border-b border-gray-300 dark:border-gray-600">
-                <span className="text-gray-800 dark:text-white">{item.title} x{item.quantity}</span>
-                <span className="text-gray-700 dark:text-gray-300">{item.price}</span>
-              </div>
-            ))}
+        {/* Order Details */}
+        <section className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">
+              Order Number
+            </span>
+            <span className="block text-lg font-semibold text-gray-900 dark:text-white">
+              {orderNumber}
+            </span>
           </div>
-        </div>
+          <div>
+            <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">
+              Order Date
+            </span>
+            <span className="block text-lg font-semibold text-gray-900 dark:text-white">
+              {orderDate}
+            </span>
+          </div>
+          <div>
+            <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">
+              Estimated Delivery
+            </span>
+            <span className="block text-lg font-semibold text-gray-900 dark:text-white">
+              {estimatedDelivery}
+            </span>
+          </div>
+          <div>
+            <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">
+              Payment Method
+            </span>
+            <div className="flex items-center space-x-1">
+              <PaymentIcon className="text-2xl text-gray-900 dark:text-white" aria-hidden="true" />
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                {paymentMethodParam === "paypal" ? "PayPal" : "Credit Card"}
+              </span>
+            </div>
+          </div>
+        </section>
 
-        {/* Shipping Information */}
-        <div className="mt-6 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold">Shipping Address</h3>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{orderDetails.shippingAddress}</p>
-        </div>
-
-        {/* Payment Method */}
-        <div className="mt-6 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold">Payment Method</h3>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{orderDetails.paymentMethod}</p>
-        </div>
-
-        {/* Estimated Delivery */}
-        <div className="mt-6 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold">Estimated Delivery</h3>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{orderDetails.estimatedDelivery}</p>
-        </div>
-
-        {/* Total Amount */}
-        <div className="mt-6 flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold">Total</h3>
-          <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">{orderDetails.totalAmount}</p>
-        </div>
-
-        {/* Order Tracking & Next Steps */}
-        <div className="mt-6 flex flex-col items-center space-y-4">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition"
-            onClick={() => router.push("/order-tracking")}
-          >
-            Track My Order
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="py-3 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition"
-            onClick={() => router.push("/")}
-          >
-            Return to Store
-          </motion.button>
-        </div>
+       {/* Order Summary */}
+<section className="mt-8">
+  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+    Order Summary
+  </h2>
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+    {/* Product Info */}
+    <div className="flex items-center space-x-6">
+      <img
+        src={product.image}
+        alt={product.title || "Product image"}
+        className="w-16 h-12 object-cover rounded-md shadow-md"
+        loading="lazy" // Lazy loading
+      />
+      <div>
+        <p className="text-lg font-medium text-gray-900 dark:text-white">
+          {product.title}
+        </p>
       </div>
     </div>
+
+    {/* Price Info */}
+    <div className="flex flex-col items-start sm:items-end sm:flex-row sm:justify-end sm:space-x-6 mt-4 sm:mt-0">
+      <div className="flex flex-col sm:items-end">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          Quantity: {quantity}
+        </p>
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          Unit Price: ${product.price}
+        </p>
+        <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
+          Total: ${totalPriceParam}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        {/* Order Progress Timeline */}
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+            Order Progress
+          </h2>
+          <div className="relative">
+            <div className="border-r-2 border-gray-200 dark:border-gray-600 absolute h-full top-0 left-4"></div>
+            <ul className="list-none m-0 p-0">
+              {[
+                { step: 1, title: "Order Placed", description: "We received your order" },
+                { step: 2, title: "Processing", description: "Your order is being processed" },
+                { step: 3, title: "Shipped", description: "Your order has been shipped" },
+                { step: 4, title: "Out for Delivery", description: "Your order is on its way" }
+              ].map((item, index) => (
+                <OrderProgressStep key={index} {...item} />
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Action Buttons */}
+        <footer className="mt-12 flex flex-col sm:flex-row justify-between items-center">
+          <button
+            onClick={() => router.push("/order-details?orderNumber=" + orderNumber)}
+            className="w-full sm:w-auto flex justify-center items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-700 transition mb-6 sm:mb-0"
+          >
+            View Order Details <FaArrowRight className="ml-2" aria-hidden="true" />
+          </button>
+          <button
+            onClick={() => router.push("/")}
+            className="w-full sm:w-auto flex justify-center items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg shadow-md text-blue-600 bg-white hover:bg-gray-50 transition"
+          >
+            Continue Shopping
+          </button>
+        </footer>
+      </motion.article>
+    </main>
   );
 };
 

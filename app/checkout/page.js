@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { db } from "../compo/Api/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { FaCreditCard, FaPaypal } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 const Checkout = () => {
@@ -16,7 +15,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
-  const [quantity, setQuantity] = useState(1); // Quantity state
+  const [quantity, setQuantity] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,12 +49,17 @@ const Checkout = () => {
       return;
     }
 
-    // Payment integration would go here
-    alert("Proceeding with payment...");
-    router.push("/order-confirmation");
+    // Calculate total price with discount and quantity
+    const totalPrice = product
+      ? ((product.price * quantity) - (product.price * quantity * discount)).toFixed(2)
+      : "0.00";
+
+    // Redirect and pass productId, quantity, paymentMethod, and totalPrice in the query string.
+    router.push(
+      `/order-confirmation?productId=${product.id}&quantity=${quantity}&paymentMethod=${paymentMethod}&totalPrice=${totalPrice}`
+    );
   };
 
-  // Total price calculation with quantity and discount
   const totalPrice = product
     ? ((product.price * quantity) - (product.price * quantity * discount)).toFixed(2)
     : "0.00";
@@ -108,7 +112,6 @@ const Checkout = () => {
               <p className="text-gray-600 dark:text-gray-300">${product.price}</p>
             </div>
           </div>
-
           {/* Quantity Selector */}
           <div className="flex items-center gap-4">
             <span className="text-lg font-semibold">Quantity</span>
