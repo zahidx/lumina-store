@@ -56,7 +56,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: <FaHome />, component: "Dashboard" },
-    { name: "Products", icon: <FaBox />, component: "Products" },
+    { name: "Pages", icon: <FaBox />, component: "Products" },
     { name: "Orders", icon: <FaShoppingCart />, component: "Orders" },
     { name: "Customers", icon: <FaUsers />, component: "Customers" },
     { name: "Settings", icon: <FaCog />, component: "Settings" },

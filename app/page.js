@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
+import Carousel from "./compo/front-end/Carousel";
+import ElectronicsStore from "./compo/front-end/ElectronicsStore"; // Adjust path as necessary
 
 export default function HeroSection() {
   const [timeOfDay, setTimeOfDay] = useState("");
@@ -41,37 +43,46 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative h-[90vh] flex items-center justify-center text-center text-white overflow-hidden">
-      <img src="/hero-bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover scale-110" />
-      <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-md"></div>
+    <div className="w-full">
+      {/* HeroSection Content */}
+      <div className="relative h-[90vh] flex items-center justify-center text-center text-white overflow-hidden">
+        <img src="/hero-bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover scale-110" />
+        <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-md"></div>
 
-      <div className="relative z-10 p-6">
-        <h1 className="text-6xl font-extrabold drop-shadow-lg">
-          {timeOfDay}, Shopper! 🎉
-        </h1>
-        <p className="mt-4 text-lg drop-shadow-md">
-          🎊 Congratulations! Enjoy {discount} off in {location} today! 🎊
-        </p>
+        <div className="relative z-10 p-6">
+          <h1 className="text-6xl font-extrabold drop-shadow-lg">
+            {timeOfDay}, Shopper! 🎉
+          </h1>
+          <p className="mt-4 text-lg drop-shadow-md">
+            🎊 Congratulations! Enjoy {discount} off in {location} today! 🎊
+          </p>
 
-        {featuredProduct ? (
-          <div className="mt-6 flex flex-col items-center">
-            <h2 className="text-3xl font-bold">{featuredProduct.name}</h2>
-            <p className="text-lg text-gray-200">{featuredProduct.description}</p>
+          {featuredProduct ? (
+            <div className="mt-6 flex flex-col items-center">
+              <h2 className="text-3xl font-bold">{featuredProduct.name}</h2>
+              <p className="text-lg text-gray-200">{featuredProduct.description}</p>
+              <button 
+                className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
+                onClick={triggerConfetti} // Extra confetti on button click
+              >
+                Shop {featuredProduct.name} 🎁
+              </button>
+            </div>
+          ) : (
             <button 
               className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
-              onClick={triggerConfetti} // Extra confetti on button click
+              onClick={triggerConfetti}
             >
-              Shop {featuredProduct.name} 🎁
+              Browse Bestsellers 🎁
             </button>
-          </div>
-        ) : (
-          <button 
-            className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
-            onClick={triggerConfetti}
-          >
-            Browse Bestsellers 🎁
-          </button>
-        )}
+          )}
+        </div>
+        <Carousel />
+      </div>
+
+      {/* ElectronicsStore outside of the HeroSection div, full width */}
+      <div className="w-full">
+        <ElectronicsStore />
       </div>
     </div>
   );
