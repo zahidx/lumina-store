@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 
-/* scroll Bar custom */
+/* Scroll Bar custom */
 /* Small width for vertical scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;  /* Small width */
+  width: 6px;  /* Small width */
   height: 5px; /* Small height for horizontal scrollbar */
 }
 
@@ -18,13 +18,13 @@
 
 /* Scrollbar Handle */
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #be0404, #c00362, #0502bd, #0416b9, #0423ac, #0332b4, #0324b6);  
+  background: #4b4548;  /* Solid color for the scrollbar handle */
   border-radius: 2px;
 }
 
 /* Hover Effect */
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, #8000ff, #2b65ff, #00ffee, #48ff00, #fffb00, #ff7300, #ff0000);
+  background: #8000ff;  /* Solid color for the hover effect */
 }
 
 @layer base {

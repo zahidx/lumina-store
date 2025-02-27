@@ -50,7 +50,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-md"></div>
 
         <div className="relative z-10 p-6">
-          <h1 className="text-6xl font-extrabold drop-shadow-lg">
+          <h1 className="text-4xl font-extrabold drop-shadow-lg">
             {timeOfDay}, Shopper! 🎉
           </h1>
           <p className="mt-4 text-lg drop-shadow-md">

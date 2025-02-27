@@ -32,7 +32,7 @@ const OptimizedCarousel = () => {
   }, [fetchProducts]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-700 via-blue-600 to-indigo-800 flex flex-col justify-center items-center py-20 px-4">
+    <div className="min-h-screen -mt-10 bg-gradient-to-r from-purple-700 via-blue-600 to-indigo-800 flex flex-col justify-center items-center py-20 px-4">
       <h2 className="text-5xl md:text-6xl font-extrabold text-center mb-12 tracking-wide bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent animate-[fadeIn_1.5s_ease-in-out]">
         🚀 Featured Products
       </h2>
