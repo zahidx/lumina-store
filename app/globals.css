@@ -26,6 +26,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #8000ff;  /* Solid color for the hover effect */
 }
+:root {
+  --swiper-pagination-bullet-inactive-color: rgb(26, 255, 225);
+  --swiper-pagination-bullet-active-color: blue;
+}
+
+
 
 @layer base {
   :root {

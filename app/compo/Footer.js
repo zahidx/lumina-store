@@ -1,4 +1,6 @@
 "use client";
+import WavyLines from "./WavyLines";
+
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -69,10 +71,13 @@ const Footer = () => {
   }, []);
 
   return (
+    <div>
+    <WavyLines />
     <footer
       ref={footerRef}
       className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 relative text-gray-300 overflow-hidden transition-colors duration-500"
     >
+       
       {/* SVG Pattern Overlay */}
       <div className="absolute inset-0 pointer-events-none">
         <svg className="w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
@@ -290,6 +295,7 @@ const Footer = () => {
       {/* Cookie Consent Banner */}
       {/* No change needed for Cookie consent */}
     </footer>
+    </div>
   );
 };
 

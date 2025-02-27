@@ -61,6 +61,7 @@ const OptimizedCarousel = () => {
             renderBullet: (index, className) =>
               `<span class="${className} w-3 h-3 bg-white rounded-full mx-1 transition-all duration-300 hover:opacity-100"></span>`,
           }}
+          
           autoplay={{ delay: 2000, disableOnInteraction: false }}
           loop
           className="w-full max-w-6xl h-auto relative"
@@ -83,9 +84,9 @@ const OptimizedCarousel = () => {
                     {product.description}
                   </p>
                   <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <p className="text-2xl md:text-3xl font-bold text-yellow-400 drop-shadow">
+                    {/* <p className="text-2xl md:text-3xl font-bold text-yellow-400 drop-shadow">
                       ${product.price}
-                    </p>
+                    </p> */}
                     <button className="bg-gradient-to-r from-green-500 to-green-500  text-white px-6 py-3 rounded-lg text-base md:text-lg font-semibold transition-transform duration-300  shadow-md">
                        Buy Now
                     </button>
