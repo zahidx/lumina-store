@@ -85,7 +85,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/">
             <motion.div
-              className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FF5722] to-[#FF9800] cursor-pointer"
+              className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FF5722] to-[#FF9800] cursor-pointer hidden md:block"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -119,7 +119,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-3">
               <motion.button
                 onClick={() => setShowLoginModal(true)} // Show modal on click
-                className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 text-lg font-semibold hover:text-[#FF5722] transition-all duration-300"
+                className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 text-lg font-semibold hover:text-[#FF5722] transition-all duration-300 hidden md:block"
                 whileHover={iconHover}
               >
 

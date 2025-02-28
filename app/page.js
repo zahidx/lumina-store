@@ -46,23 +46,27 @@ export default function HeroSection() {
     <div className="w-full">
       {/* HeroSection Content */}
       <div className="relative h-[90vh] flex items-center justify-center text-center text-white overflow-hidden">
-        <img src="/hero-bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover scale-110" />
+        <img 
+          src="/hero-bg.jpg" 
+          alt="Hero Background" 
+          className="absolute inset-0 w-full h-full object-cover scale-110"
+        />
         <div className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-md"></div>
 
         <div className="relative z-10 p-6">
-          <h1 className="text-4xl font-extrabold drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl font-extrabold drop-shadow-lg">
             {timeOfDay}, Shopper! 🎉
           </h1>
-          <p className="mt-4 text-lg drop-shadow-md">
+          <p className="mt-4 text-base sm:text-lg drop-shadow-md">
             🎊 Congratulations! Enjoy {discount} off in {location} today! 🎊
           </p>
 
           {featuredProduct ? (
             <div className="mt-6 flex flex-col items-center">
-              <h2 className="text-3xl font-bold">{featuredProduct.name}</h2>
-              <p className="text-lg text-gray-200">{featuredProduct.description}</p>
+              <h2 className="text-2xl sm:text-3xl font-bold">{featuredProduct.name}</h2>
+              <p className="text-sm sm:text-lg text-gray-200">{featuredProduct.description}</p>
               <button 
-                className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
+                className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-sm sm:text-lg"
                 onClick={triggerConfetti} // Extra confetti on button click
               >
                 Shop {featuredProduct.name} 🎁
@@ -70,7 +74,7 @@ export default function HeroSection() {
             </div>
           ) : (
             <button 
-              className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-lg"
+              className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg text-sm sm:text-lg"
               onClick={triggerConfetti}
             >
               Browse Bestsellers 🎁

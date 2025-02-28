@@ -32,23 +32,26 @@ const OptimizedCarousel = () => {
   }, [fetchProducts]);
 
   return (
-    <div className="min-h-screen -mt-10 bg-gradient-to-r from-purple-700 via-blue-600 to-indigo-800 flex flex-col justify-center items-center py-20 px-4">
-      <h2 className="text-5xl md:text-6xl font-extrabold text-center mb-12 tracking-wide bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent animate-[fadeIn_1.5s_ease-in-out]">
+    <div className="min-h-screen bg-gradient-to-r from-purple-700 via-blue-600 to-indigo-800 flex flex-col justify-center items-center py-6 px-4 sm:py-10 sm:px-6 md:py-20 md:px-8">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-6 sm:mb-8 md:mb-12 tracking-wide bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent animate-[fadeIn_1.5s_ease-in-out]">
         🚀 Featured Products
       </h2>
 
       {loading ? (
-        <div className="flex justify-center items-center h-96">
+        <div className="flex justify-center items-center h-48 sm:h-64 md:h-80">
           <div className="flex space-x-4">
             {[...Array(3)].map((_, index) => (
-              <div key={index} className="w-64 h-64 bg-gray-300 rounded-xl animate-pulse" />
+              <div
+                key={index}
+                className="w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-gray-300 rounded-xl animate-pulse"
+              />
             ))}
           </div>
         </div>
       ) : products.length > 0 ? (
         <Swiper
           modules={[Navigation, Pagination, Autoplay, EffectFade]}
-          spaceBetween={30}
+          spaceBetween={10}
           slidesPerView={1}
           navigation={{
             prevEl: ".swiper-button-prev-custom",
@@ -61,14 +64,13 @@ const OptimizedCarousel = () => {
             renderBullet: (index, className) =>
               `<span class="${className} w-3 h-3 bg-white rounded-full mx-1 transition-all duration-300 hover:opacity-100"></span>`,
           }}
-          
-          autoplay={{ delay: 2000, disableOnInteraction: false }}
+          autoplay={{ delay: 2500, disableOnInteraction: false }}
           loop
           className="w-full max-w-6xl h-auto relative"
         >
           {products.map((product, index) => (
             <SwiperSlide key={index} className="flex justify-center items-center">
-              <div className="relative w-full h-[500px] overflow-hidden rounded-2xl shadow-xl transition-transform duration-700 ">
+              <div className="relative w-full h-[350px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-2xl shadow-xl transition-transform duration-700">
                 <img
                   src={product.url}
                   alt={`Slide ${index + 1}`}
@@ -76,30 +78,29 @@ const OptimizedCarousel = () => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
-                <div className="absolute inset-0 flex flex-col justify-end items-center p-6 md:p-8 z-10 text-center">
-                  <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow">
+                {/* Overlay container: text is center aligned on mobile */}
+                <div className="absolute inset-0 flex flex-col justify-end items-center p-4 sm:p-6 md:p-8 z-10 text-center">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white drop-shadow">
                     {product.title}
                   </h3>
-                  <p className="text-sm md:text-lg text-gray-200 mt-2 mb-4 max-w-lg drop-shadow">
+                  <p className="text-sm sm:text-base md:text-lg text-gray-200 mt-2 mb-4 max-w-xs sm:max-w-md md:max-w-lg drop-shadow">
                     {product.description}
                   </p>
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    {/* <p className="text-2xl md:text-3xl font-bold text-yellow-400 drop-shadow">
-                      ${product.price}
-                    </p> */}
-                    <button className="bg-gradient-to-r from-green-500 to-green-500  text-white px-6 py-3 rounded-lg text-base md:text-lg font-semibold transition-transform duration-300  shadow-md">
-                       Buy Now
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <button className="bg-gradient-to-r from-green-500 to-green-500 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-lg text-base sm:text-lg md:text-xl font-semibold transition-transform duration-300 shadow-md">
+                      Buy Now
                     </button>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
           ))}
+
           {/* Custom Navigation Buttons */}
-          <div className="swiper-button-prev-custom absolute top-1/2 left-4 transform -translate-y-1/2 z-20 p-2 bg-black bg-opacity-50 rounded-full cursor-pointer text-white text-xl md:text-3xl">
+          <div className="swiper-button-prev-custom absolute top-1/2 left-4 transform -translate-y-1/2 z-20 p-2 bg-black bg-opacity-50 rounded-full cursor-pointer text-white text-2xl sm:text-3xl md:text-4xl">
             &#10094;
           </div>
-          <div className="swiper-button-next-custom absolute top-1/2 right-4 transform -translate-y-1/2 z-20 p-2 bg-black bg-opacity-50 rounded-full cursor-pointer text-white text-xl md:text-3xl">
+          <div className="swiper-button-next-custom absolute top-1/2 right-4 transform -translate-y-1/2 z-20 p-2 bg-black bg-opacity-50 rounded-full cursor-pointer text-white text-2xl sm:text-3xl md:text-4xl">
             &#10095;
           </div>
         </Swiper>

@@ -1,8 +1,9 @@
 "use client";
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { FaPhoneAlt, FaEnvelope, FaPaperPlane, FaUser, FaComment } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 
 const ContactPage = () => {
@@ -49,48 +50,69 @@ const ContactPage = () => {
             className="w-full lg:w-1/2"
           >
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Send a Message</h3>
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                <FaPaperPlane className="text-indigo-600 dark:text-indigo-500 mr-2" />
+                Send a Message
+              </h3>
               <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Name
                   </label>
-                  <input
-                    id="name"
-                    type="text"
-                    {...register("name", { required: "Name required" })}
-                    className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                    aria-invalid={errors.name ? "true" : "false"}
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaUser className="text-gray-400" />
+                    </div>
+                    <input
+                      id="name"
+                      type="text"
+                      {...register("name", { required: "Name required" })}
+                      className="mt-1 block w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition duration-300"
+                      aria-invalid={errors.name ? "true" : "false"}
+                    />
+                  </div>
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Email
                   </label>
-                  <input
-                    id="email"
-                    type="email"
-                    {...register("email", {
-                      required: "Email required",
-                      pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-                    })}
-                    className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                    aria-invalid={errors.email ? "true" : "false"}
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaEnvelope className="text-gray-400" />
+                    </div>
+                    <input
+                      id="email"
+                      type="email"
+                      {...register("email", {
+                        required: "Email required",
+                        pattern: {
+                          value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/i,
+                          message: "Invalid email",
+                        },
+                      })}
+                      className="mt-1 block w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition duration-300"
+                      aria-invalid={errors.email ? "true" : "false"}
+                    />
+                  </div>
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Message
                   </label>
-                  <textarea
-                    id="message"
-                    rows="3"
-                    {...register("message", { required: "Message required" })}
-                    className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                    aria-invalid={errors.message ? "true" : "false"}
-                  ></textarea>
+                  <div className="relative">
+                    <div className="absolute top-3 left-3 pointer-events-none">
+                      <FaComment className="text-gray-400" />
+                    </div>
+                    <textarea
+                      id="message"
+                      rows="3"
+                      {...register("message", { required: "Message required" })}
+                      className="mt-1 block w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition duration-300"
+                      aria-invalid={errors.message ? "true" : "false"}
+                    ></textarea>
+                  </div>
                   {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
                 </div>
                 <div className="flex justify-end">
