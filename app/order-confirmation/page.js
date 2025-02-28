@@ -1,26 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { db } from "../compo/Api/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaArrowRight, FaCreditCard, FaPaypal } from "react-icons/fa";
 
-// Reusable component for order progress steps
-const OrderProgressStep = ({ step, title, description }) => (
-  <li className="mb-8 flex items-center">
-    <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full z-10">
-      {step}
-    </div>
-    <div className="ml-6">
-      <p className="text-lg font-medium text-gray-900 dark:text-white">{title}</p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
-    </div>
-  </li>
-);
-
-const OrderConfirmation = () => {
+const OrderConfirmationContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -42,7 +29,13 @@ const OrderConfirmation = () => {
         const docRef = doc(db, "electronics", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setProduct({ id: docSnap.id, ...docSnap.data() });
+          const productData = docSnap.data();
+          setProduct({
+            id: docSnap.id,
+            title: productData.title || "Unknown Product", // Use title field
+            image: productData.image || "/placeholder.jpg",
+            price: productData.price || "0.00",
+          });
         } else {
           setError("Product not found!");
         }
@@ -66,20 +59,15 @@ const OrderConfirmation = () => {
   }, [fetchProduct]);
 
   if (loading) {
-    return (
-      <p className="mt-10 text-center text-gray-600 dark:text-gray-400">
-        Loading...
-      </p>
-    );
+    return <p className="mt-10 text-center text-gray-600 dark:text-gray-400">Loading...</p>;
   }
 
   if (error) {
-    return (
-      <p className="mt-10 text-center text-red-500">{error}</p>
-    );
+    return <p className="mt-10 text-center text-red-500">{error}</p>;
   }
 
   const quantity = parseInt(quantityParam, 10);
+  const totalPrice = parseFloat(totalPriceParam).toFixed(2);
   const PaymentIcon = paymentMethodParam === "paypal" ? FaPaypal : FaCreditCard;
 
   return (
@@ -90,7 +78,6 @@ const OrderConfirmation = () => {
         transition={{ duration: 0.7 }}
         className="max-w-3xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8"
       >
-        {/* Confirmation Header */}
         <header className="flex flex-col items-center">
           <FaCheckCircle className="text-green-500 text-7xl mb-4" aria-hidden="true" />
           <h1 className="mt-4 text-4xl font-extrabold text-gray-900 dark:text-white">
@@ -140,64 +127,33 @@ const OrderConfirmation = () => {
           </div>
         </section>
 
-       {/* Order Summary */}
-<section className="mt-8">
-  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-    Order Summary
-  </h2>
-  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
-    {/* Product Info */}
-    <div className="flex items-center space-x-6">
-      <img
-        src={product.image}
-        alt={product.title || "Product image"}
-        className="w-16 h-12 object-cover rounded-md shadow-md"
-        loading="lazy" // Lazy loading
-      />
-      <div>
-        <p className="text-lg font-medium text-gray-900 dark:text-white">
-          {product.title}
-        </p>
-      </div>
-    </div>
-
-    {/* Price Info */}
-    <div className="flex flex-col items-start sm:items-end sm:flex-row sm:justify-end sm:space-x-6 mt-4 sm:mt-0">
-      <div className="flex flex-col sm:items-end">
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          Quantity: {quantity}
-        </p>
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          Unit Price: ${product.price}
-        </p>
-        <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
-          Total: ${totalPriceParam}
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-        {/* Order Progress Timeline */}
-        <section className="mt-10">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            Order Progress
-          </h2>
-          <div className="relative">
-            <div className="border-r-2 border-gray-200 dark:border-gray-600 absolute h-full top-0 left-4"></div>
-            <ul className="list-none m-0 p-0">
-              {[
-                { step: 1, title: "Order Placed", description: "We received your order" },
-                { step: 2, title: "Processing", description: "Your order is being processed" },
-                { step: 3, title: "Shipped", description: "Your order has been shipped" },
-                { step: 4, title: "Out for Delivery", description: "Your order is on its way" }
-              ].map((item, index) => (
-                <OrderProgressStep key={index} {...item} />
-              ))}
-            </ul>
-          </div>
-        </section>
+        {/* Product Details */}
+        {product && (
+          <section className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Product Details</h2>
+            <div className="mt-4 flex justify-between items-center">
+              {/* Left Side: Image and Title */}
+              <div className="flex items-center space-x-4">
+                <img
+                  src={product.image}
+                  alt={product.title}  // Updated to `title`
+                  className="w-20 h-20 object-cover rounded-lg shadow"
+                />
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {product.title}  {/* Updated to `title` */}
+                </p>
+              </div>
+              {/* Right Side: Price Details */}
+              <div className="text-right">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Quantity: {quantity}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Price: ${product.price}</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white">
+                  Total: ${totalPrice}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Action Buttons */}
         <footer className="mt-12 flex flex-col sm:flex-row justify-between items-center">
@@ -216,6 +172,14 @@ const OrderConfirmation = () => {
         </footer>
       </motion.article>
     </main>
+  );
+};
+
+const OrderConfirmation = () => {
+  return (
+    <Suspense fallback={<p className="mt-10 text-center text-gray-600 dark:text-gray-400">Loading...</p>}>
+      <OrderConfirmationContent />
+    </Suspense>
   );
 };
 

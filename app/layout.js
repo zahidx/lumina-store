@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./ClientLayout"; // Import the client-side layout
+import Head from "next/head"; // Import Next.js Head component
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,10 +26,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href={metadata.manifest} /> {/* Link to manifest */}
-        <meta name="theme-color" content="#000000" /> {/* Optional: Customize the theme color */}
-      </head>
+      <Head> 
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <link rel="icon" href={metadata.icons.icon} />
+        <link rel="manifest" href={metadata.manifest} />
+        <meta name="theme-color" content="#000000" />
+      </Head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
