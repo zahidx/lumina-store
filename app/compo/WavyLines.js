@@ -63,7 +63,7 @@ const WavyLines = () => {
         />
       </motion.svg>
 
-      {/* Third Wavy Line - Cyan-Green Glow (Fixed Blur Issue) */}
+      {/* Third Ball - Cyan-Green Glow */}
       <motion.svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1440 320"
@@ -83,12 +83,12 @@ const WavyLines = () => {
             <stop offset="100%" stopColor="#00ffd5" />
           </linearGradient>
         </defs>
-        <path
-          fill="none"
-          stroke="url(#waveGradient3)"
-          strokeWidth="8"
-          strokeLinecap="round"
-          d="M0,160 C120,180 240,140 360,160 C480,180 600,140 720,160 C840,180 960,140 1080,160 C1200,180 1320,140 1440,160"
+        {/* Circle for Ball */}
+        <circle
+          cx="720"
+          cy="160"
+          r="20"
+          fill="url(#waveGradient3)"
         />
       </motion.svg>
     </div>
