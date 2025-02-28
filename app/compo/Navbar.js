@@ -184,11 +184,11 @@ const Navbar = () => {
             <button
               aria-label="Open Menu"
               className={`md:hidden text-3xl text-gray-700 dark:text-white focus:outline-none 
-              transform active:scale-90 drop-shadow-lg transition-transform duration-300 ease-in-out 
+              transform active:scale-90 drop-shadow-lg transition-transform duration-300 ease-in-out -ml-44 
               ${isMobileMenuOpen ? "rotate-90" : "rotate-0"}`}
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             >
-              <IoMenu className="text-3xl text-gray-700 dark:text-white" />
+              <IoMenu className="text-3xl text-gray-700 dark:text-white " />
             </button>
           </div>
         </div>
