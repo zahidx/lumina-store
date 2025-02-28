@@ -27,28 +27,7 @@ const ElectronicsStore = () => {
       <div className="container mx-auto px-4 py-6">
         <h2 className="text-4xl font-bold text-center mb-10">Electronics Store</h2>
         
-        {/* Filter Bar (Optional) */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search Products"
-              className="p-2 border rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none"
-            />
-            <select className="p-2 border rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white">
-              <option>All Categories</option>
-              <option>Smartphones</option>
-              <option>Laptops</option>
-              <option>Accessories</option>
-            </select>
-          </div>
-          <button
-            className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-            onClick={() => console.log("Filter applied")}
-          >
-            Apply Filter
-          </button>
-        </div>
+        
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
