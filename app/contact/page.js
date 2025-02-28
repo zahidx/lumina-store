@@ -31,7 +31,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 pt-24">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 pt-28 sm:pt-28">
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -117,7 +117,7 @@ const ContactPage = () => {
           >
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
               <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Contact Information</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {infoCards.map(({ icon: Icon, title, content }, index) => (
                   <div key={index} className="flex flex-col items-center text-center">
                     <Icon className="text-indigo-600 dark:text-indigo-500 text-3xl" />
